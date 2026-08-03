@@ -97,6 +97,8 @@ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.6/install.sh | bash
 
 ## Building Backstage
 
+More information at https://backstage.io/docs/getting-started/
+
 ```bash
 npm install -g corepack
 npx @backstage/create-app@latest
