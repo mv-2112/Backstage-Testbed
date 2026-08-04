@@ -5,6 +5,14 @@ How to setup a viable backstage personal development system with a database back
 ---
 ## Pre-reqs
 
+### Docker account
+
+You'll need a Docker account, the part we are after is the repository name, e.g hub.docker.com/repositories/__bob__
+
+```bash
+export DOCKER_REPO="bob"
+```
+
 ### Github account
 
 You'll need a github account, naturally. The part we are after is the username, e.g github.com/__bob__
@@ -306,15 +314,15 @@ yarn build:backend
 
 ## Build your Docker images and push to your docker account
 
-Copy the Dockerfile into palce
+Copy the Dockerfile into place
 ```bash
 cp ../Dockerfile .
 ```
 
 Build and upload the Docker image
 ```bash
-docker build -t $DOCKER_USER/backstage:0.0.15 .
-docker push $DOCKER_USER/backstage:0.0.15
+docker build -t $DOCKER_REPO/backstage:0.0.15 .
+docker push $DOCKER_REPO/backstage:0.0.15
 ```
 
 
