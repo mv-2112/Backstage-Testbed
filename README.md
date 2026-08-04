@@ -346,9 +346,15 @@ kubectl exec -it backstage-database-1 -n backstage -- psql -U postgres -d postgr
 
 
 
-## Deploy Backstage
-
-
-
 ## Deploy Backstage to your cluster
 kubectl apply -f backstage-prod.yaml
+
+What order to apply in?
+
+backstage-ingress.yaml
+backstage-prod.yaml
+backstage-service.yaml
+backstage-issuer.yaml
+backstage-redirect.yaml
+
+
