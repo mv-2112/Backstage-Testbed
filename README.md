@@ -61,6 +61,12 @@ https://krew.sigs.k8s.io/docs/user-guide/setup/install/
 ```bash
 echo "export PATH=\"${KREW_ROOT:-$HOME/.krew}/bin:$PATH\"" >> ~/.bashrc
 ```
+Either restart your shell or run direct
+```bash
+export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+```
+
+Test the krew install works and add cnpg (Cloud Native PostgreSQL)
 
 ```bash
 kubectl-krew update
@@ -79,22 +85,35 @@ alias helm='microk8s helm'
 
 ### Install Cloud Native Postgresql
 
-cd $HOME
-mkdir .kube
-cd .kube
-microk8s config > config
+If you are using microk8s, you need to ensure your kubeconfig is in the right place for other tools.
+
+```bash
+if [[ ! -d $HOME/.kube ]]; then
+  echo "Creating $HOME/.kube directory" 
+  mkdir $HOME/.kube
+  echo "Creating kubeconfig in $HOME/.kube/config"
+  microk8s config > $HOME/.kube/config
+elif [[ ! -f $HOME/.kube/config ]]; then
+  echo "Creating kubeconfig in $HOME/.kube/config"
+  microk8s config > $HOME/.kube/config
+fi
+```
 
 Now follow from https://github.com/pgEdge/pgedge-helm/blob/main/docs/install.md#step-2-install-chart-dependencies
 
 #### Add the pgEdge Helm repository
+
+```bash
 helm repo add pgedge https://pgedge.github.io/charts
 helm repo update
-
+```
 #### Install CloudNativePG operator
+
+```bash
 helm install cnpg pgedge/cloudnative-pg \
   --namespace cnpg-system \
   --create-namespace
-
+```
 
 ### Deploy CloudNativePG instance
 
