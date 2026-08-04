@@ -138,9 +138,22 @@ kubectl apply -f ./values.yaml
 ```
   
 ## Install node.js
- 
+
+Install NMV
 ```bash
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.6/install.sh | bash
+```
+
+Setup your env by running the commands below (or restart your terminal)
+```bash
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+```
+
+Install the latest LTS release of node.js
+```bash
+nvm install --lts
 ```
 
 ## Building Backstage
