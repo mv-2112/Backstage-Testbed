@@ -70,7 +70,7 @@ kubectl-krew install cnpg
 ### Install Helm
 
 ```bash
-sudo snap install helm
+sudo snap install helm --classic
 ```
 Or alias the microk8s built-in helm
 ```bash
