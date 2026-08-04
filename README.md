@@ -23,6 +23,17 @@ export GITHUB_ORG="my_github_org"
 
 ---
 
+## Prepare our files
+
+This repo contains the files you will need modify with your specifics.
+
+| File             | Description                                                              |
+| -----------------| ------------------------------------------------------------------------ |
+| Dockerfile       | This Dockerfile will instruct how to build the backstage container       |
+| pg_values.yaml   | Contains the config for PostgreSQL                                       |
+
+
+
 ## Install k8s
 
 This has been tested on microk8s, its my preferred option but any alternative that gives you storage for PV's, dns, ingress and cert-manager and metallb will work fine.
@@ -153,7 +164,7 @@ spec:
 ```
 Run the below to install.
 ```bash
-kubectl apply -f ./values.yaml
+kubectl apply -f ./pg_values.yaml
 ```
   
 ## Install node.js
