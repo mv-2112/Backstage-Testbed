@@ -23,7 +23,7 @@ export GITHUB_ORG="my_github_org"
 
 ---
 
-## Prepare our files
+## Prepare the files
 
 This repo contains the files you will need modify with your specifics.
 
@@ -31,8 +31,31 @@ This repo contains the files you will need modify with your specifics.
 | -----------------| ------------------------------------------------------------------------ |
 | Dockerfile       | This Dockerfile will instruct how to build the backstage container       |
 | pg_values.yaml   | Contains the config for PostgreSQL                                       |
+| app-config.yaml  | The application config, requires changes                                 |
+| App.tsx          | Modified file with SignInPage routine                                    |
+| index.ts         | Modified file with additional featues imported                           |
 
+### Dockerfile
 
+This requires no changes. The sqlite3 section can probably be removed.
+
+### pg_values.yaml
+
+You may wish to allocate more space than 1GB
+
+### app_config.yaml
+
+This requires a number of changes, these will be guided in a later section
+
+### App.tsx
+
+This file is ready to go, you will copy this in place later
+
+### index.tx
+
+This file is ready to go, you will copy this in place later
+
+---
 
 ## Install k8s
 
