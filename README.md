@@ -72,6 +72,10 @@ kubectl-krew install cnpg
 ```bash
 sudo snap install helm
 ```
+Or alias the microk8s built-in helm
+```bash
+alias helm='microk8s helm'
+```
 
 ### Install Cloud Native Postgresql
 
