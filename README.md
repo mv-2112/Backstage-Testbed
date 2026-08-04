@@ -20,7 +20,12 @@ You can create one here at [https://github.com/settings/organizations](https://g
 ```bash
 export GITHUB_ORG="my_github_org"
 ```
+### This repo
 
+Download the repo and cd into it.
+
+```bash
+git clone https://github.com/mv-2112/Backstage-Testbed.git && cd Backstage-Testbed
 ---
 
 ## Prepare the files
@@ -257,13 +262,38 @@ Remove the production config
 ```bash
 mv app-config.production.yaml app-config.production.yaml.donotuse
 ```
-__TODO__
-- alter files
-- create github org... or personal?
+
+Copy App.tsx and index.ts into place
+
+```bash
+cp ../App.tsx ./packages/app/src
+cp ../index.ts ./packages/backend/src
+```
+
+Now lets make changes to the app-config.yaml file, this is the core config.
+```bash
+yq -i '.app.baseUrl="https://backstage.local"' ./app-config.yaml
+yq -i '.backend.cors.origin="https://backstage.local"' ./app-config.yaml
+yq -i '.backend.baseUrl="https://backstage.local"' ./app-config.yaml
+
+yq -i '.backend.database = {"client": "pg", "connection": {"host": "${POSTGRES_HOST}", "port": 5432, "user": "${POSTGRES_USER}", "password": "${POSTGRES_PASSWORD}"}}' ./app-config.yaml
+
+yq -i 'with(.integrations.github[0]; . *= {"host": "github.com", "apps": {"appId": "${GITHUB_APP_ID}", "clientId": "${GITHUB_APP_CLIENT_ID}", "clientSecret": "${GITHUB_APP_CLIENT_SECRET}", "privateKey": "${GITHUB_APP_PRIVATE_KEY}"}} | del(.token))' ./app-config.yaml
+
+
+yq -i '.auth = {"clientIdMetadataDocuments": {"enabled": false}, "environment": "production", "providers": {"github": {"production": {"clientId": "${GITHUB_APP_CLIENT_ID}", "clientSecret": "${GITHUB_APP_CLIENT_SECRET}", "signIn": {"resolvers": [{"resolver": "usernameMatchingUserEntityName"}]}}}}}' ./app-config.yaml
+
+yq -i '.scaffolder.experimentalTemplateEditor = true' ./app-config.yaml
+
+
+yq -i ' .catalog = {"providers": {"githubOrg": [{"id": "production", "githubUrl": "https://github.com", "orgs": [env(GITHUB_ORG)], "schedule": {"frequency": {"minutes": 10}, "timeout": {"minutes": 5}}}]}}' ./app-config.yaml
   
+yq -i ' .permission = {"enabled": true, "options": {"adminUsers": [("user:default/" + env(GITHUB_USER))]}} ' ./app-config.yaml
+```
 
 
-From https://backstage.io/docs/deployment/docker#host-build
+From https://backstage.io/docs/deployment/docker#host-build, lets build the application.
+
 ```bash
 yarn install --immutable
 yarn tsc
@@ -272,75 +302,39 @@ yarn build:backend
 
 
 
-Create a Github app
+## Build your Docker images and push to your docker account
+
+Copy the Dockerfile into palce
+```bash
+cp ../Dockerfile .
+```
+
+Build and upload the Docker image
+```bash
+docker build -t $DOCKER_USER/backstage:0.0.15 .
+docker push $DOCKER_USER/backstage:0.0.15
+```
+
+
+
+---
+
+__TODO__
+
+## Create a Github app
 
 ```bash
 yarn backstage-cli create-github-app blackcatengineering
 ```
 
-Create this Dockerfile in the backstage directory
-```Dockerfile
-FROM node:24-trixie-slim
-
-# Set Python interpreter for `node-gyp` to use
-ENV PYTHON=/usr/bin/python3
-
-# Install isolate-vm dependencies, these are needed by the @backstage/plugin-scaffolder-backend.
-RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
-    --mount=type=cache,target=/var/lib/apt,sharing=locked \
-    apt-get update && \
-    apt-get install -y --no-install-recommends python3 g++ build-essential && \
-    rm -rf /var/lib/apt/lists/*
-
-# From here on we use the least-privileged `node` user to run the backend.
-USER node
-
-# This should create the app dir as `node`.
-# If it is instead created as `root` then the `tar` command below will fail: `can't create directory 'packages/': Permission denied`.
-# If this occurs, then ensure BuildKit is enabled (`DOCKER_BUILDKIT=1`) so the app dir is correctly created as `node`.
-WORKDIR /app
-
-# Copy files needed by Yarn
-COPY --chown=node:node .yarn ./.yarn
-COPY --chown=node:node .yarnrc.yml ./
-COPY --chown=node:node backstage.json ./
-
-# This switches many Node.js dependencies to production mode.
-ENV NODE_ENV=production
-
-# This disables node snapshot for Node 20 to work with the Scaffolder
-ENV NODE_OPTIONS="--no-node-snapshot"
-
-# Copy repo skeleton first, to avoid unnecessary docker cache invalidation.
-# The skeleton contains the package.json of each package in the monorepo,
-# and along with yarn.lock and the root package.json, that's enough to run yarn install.
-COPY --chown=node:node yarn.lock package.json packages/backend/dist/skeleton.tar.gz ./
-RUN tar xzf skeleton.tar.gz && rm skeleton.tar.gz
-
-RUN --mount=type=cache,target=/home/node/.cache/yarn,sharing=locked,uid=1000,gid=1000 \
-    yarn workspaces focus --all --production && rm -rf "$(yarn cache clean)"
-
-# This will include the examples, if you don't need these simply remove this line
-COPY --chown=node:node examples ./examples
-
-# Then copy the rest of the backend bundle, along with any other files we might want.
-COPY --chown=node:node packages/backend/dist/bundle.tar.gz app-config*.yaml ./
-RUN tar xzf bundle.tar.gz && rm bundle.tar.gz
-
-CMD ["node", "packages/backend", "--config", "app-config.yaml"]
-```
-
-## Build your Docker images and push to your docker account
-
-```bash
-docker build -t verranm/backstage:0.0.15 .
-docker push verranm/backstage:0.0.15
-```
 
 
 ## Might be needed for DB
 kubectl exec -it backstage-database-1 -n backstage -- psql -U postgres -d postgres -c "ALTER USER app CREATEDB;"
 
+
+
+## Deploy Backstage
 
 
 
