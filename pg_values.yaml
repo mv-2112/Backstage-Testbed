@@ -1,0 +1,12 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: backstage-database
+  namespace: backstage
+spec:
+  instances: 1
+  enableSuperuserAccess: true
+  monitoring:
+    enablePodMonitor: true
+  storage:
+    size: 1Gi
