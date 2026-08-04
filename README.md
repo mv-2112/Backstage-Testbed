@@ -22,12 +22,21 @@ Or alias the microk8s built-in
 alias kubectl='microk8s kubectl'
 ```
 
+```bash
+sudo usermod -a -G microk8s $USER
+newgrp microk8s
+```
+
 Enable the required extra features. You should change the metallb network range to suit your network - ideally they should be out of your DHCP range
 ```bash
 microk8s enable hostpath-storage
-microk8s enable dns ingress
+microk8s enable dns
+microk8s enable ingress
 microk8s enable cert-manager
-microk8s enable metallb:192.168.88.20-192.168.88.39 # 
+```
+Enable metallb with an IP range applicable to your machines subnet
+```bash
+microk8s enable metallb: 10.225.118.20-10.225.118.39
 ```
 
 
@@ -36,6 +45,22 @@ microk8s enable metallb:192.168.88.20-192.168.88.39 #
 ### Install krew
 
 https://krew.sigs.k8s.io/docs/user-guide/setup/install/
+
+```bash
+(
+  set -x; cd "$(mktemp -d)" &&
+  OS="$(uname | tr '[:upper:]' '[:lower:]')" &&
+  ARCH="$(uname -m | sed -e 's/x86_64/amd64/' -e 's/\(arm\)\(64\)\?.*/\1\2/' -e 's/aarch64$/arm64/')" &&
+  KREW="krew-${OS}_${ARCH}" &&
+  curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/latest/download/${KREW}.tar.gz" &&
+  tar zxvf "${KREW}.tar.gz" &&
+  ./"${KREW}" install krew
+)
+```
+
+```bash
+echo "export PATH=\"${KREW_ROOT:-$HOME/.krew}/bin:$PATH\"" >> ~/.bashrc
+```
 
 ```bash
 kubectl-krew update
