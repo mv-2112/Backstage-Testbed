@@ -9,12 +9,12 @@ How to setup a viable backstage personal development system
 This has been tested on microk8s, its my preferred option but any alternative that gives you storage for PV's, dns, ingress and cert-manager and metallb will work fine.
 
 ```bash
-snap install microk8s --classic
+sudo snap install microk8s --classic
 ```
 
 You can install the `kubectl` snap
 ```bash
-snap install kubectl --classic
+sudo snap install kubectl --classic
 ```
 
 Or alias the microk8s built-in
@@ -45,7 +45,7 @@ kubectl-krew install cnpg
 ### Install Helm
 
 ```bash
-snap install helm
+sudo snap install helm
 ```
 
 ### Install Cloud Native Postgresql
