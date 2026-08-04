@@ -57,9 +57,11 @@ This file is ready to go, you will copy this in place later
 
 ---
 
-## Install k8s
+## Install docker, k8s and other software
 
-This has been tested on microk8s, its my preferred option but any alternative that gives you storage for PV's, dns, ingress and cert-manager and metallb will work fine.
+This has been tested on Ubuntu 26.04 LTS using microk8s, its my preferred option but any alternative that gives you storage for PV's, dns, ingress and cert-manager and metallb should work fine.
+
+### Install microk8s
 
 ```bash
 sudo snap install microk8s --classic
@@ -80,6 +82,29 @@ sudo usermod -a -G microk8s $USER
 newgrp microk8s
 ```
 
+### Install Docker
+
+We will also need docker to build the Backstage container later on. You can use podman if you prefer.
+
+```bash
+sudo snap install docker
+sudo groupadd docker
+sudo chgrp docker /var/run/docker.sock
+sudo usermod -a -G docker $USER
+newgrp docker
+```
+### Install Helm
+
+```bash
+sudo snap install helm --classic
+```
+Or alias the microk8s built-in helm
+```bash
+alias helm='microk8s helm'
+```
+
+### Configure microk8s
+
 Enable the required extra features. You should change the metallb network range to suit your network - ideally they should be out of your DHCP range
 ```bash
 microk8s enable hostpath-storage
@@ -91,12 +116,31 @@ Enable metallb with an IP range applicable to your machines subnet
 ```bash
 microk8s enable metallb: 10.225.118.20-10.225.118.39
 ```
+### Install node.js
 
+Install NVM
+```bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.6/install.sh | bash
+```
 
-## Installing the PostgreSQL backend
+Setup your env by running the commands below (or restart your terminal)
+```bash
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+```
+
+Install the latest LTS release of node.js
+```bash
+nvm install --lts
+```
+---
+
+## Installing PostgreSQL
 
 ### Install krew
 
+__TODO__: review if there is a simpler way as per 
 https://krew.sigs.k8s.io/docs/user-guide/setup/install/
 
 ```bash
@@ -110,7 +154,7 @@ https://krew.sigs.k8s.io/docs/user-guide/setup/install/
   ./"${KREW}" install krew
 )
 ```
-
+This requires changes to your enf file.
 ```bash
 echo "export PATH=\"${KREW_ROOT:-$HOME/.krew}/bin:$PATH\"" >> ~/.bashrc
 ```
@@ -124,16 +168,6 @@ Test the krew install works and add cnpg (Cloud Native PostgreSQL)
 ```bash
 kubectl-krew update
 kubectl-krew install cnpg
-```
-
-### Install Helm
-
-```bash
-sudo snap install helm --classic
-```
-Or alias the microk8s built-in helm
-```bash
-alias helm='microk8s helm'
 ```
 
 ### Install Cloud Native Postgresql
@@ -160,7 +194,7 @@ Now follow from https://github.com/pgEdge/pgedge-helm/blob/main/docs/install.md#
 helm repo add pgedge https://pgedge.github.io/charts
 helm repo update
 ```
-#### Install CloudNativePG operator
+### Install CloudNativePG operator
 
 ```bash
 helm install cnpg pgedge/cloudnative-pg \
@@ -170,7 +204,7 @@ helm install cnpg pgedge/cloudnative-pg \
 
 ### Deploy CloudNativePG instance
 
-Create a values.yaml from https://github.com/pgEdge/pgedge-helm/blob/main/examples/configs/single/values.yaml
+Create a pg_values.yaml from https://github.com/pgEdge/pgedge-helm/blob/main/examples/configs/single/values.yaml or use the one in this repo.
 ```yaml
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
@@ -189,25 +223,7 @@ Run the below to install.
 ```bash
 kubectl apply -f ./pg_values.yaml
 ```
-  
-## Install node.js
-
-Install NVM
-```bash
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.6/install.sh | bash
-```
-
-Setup your env by running the commands below (or restart your terminal)
-```bash
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-```
-
-Install the latest LTS release of node.js
-```bash
-nvm install --lts
-```
+---
 
 ## Building Backstage
 
