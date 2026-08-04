@@ -26,6 +26,8 @@ Download the repo and cd into it.
 
 ```bash
 git clone https://github.com/mv-2112/Backstage-Testbed.git && cd Backstage-Testbed
+```
+
 ---
 
 ## Prepare the files
