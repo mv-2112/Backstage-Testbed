@@ -139,7 +139,7 @@ kubectl apply -f ./values.yaml
   
 ## Install node.js
 
-Install NMV
+Install NVM
 ```bash
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.6/install.sh | bash
 ```
@@ -163,6 +163,17 @@ More information at https://backstage.io/docs/getting-started/
 ```bash
 npm install -g corepack
 npx @backstage/create-app@latest
+```
+
+```console
+$ npx @backstage/create-app@latest
+Need to install the following packages:
+@backstage/create-app@0.9.0
+Ok to proceed? (y) y
+? Enter a name for the app [required] backstage
+```
+
+```bash
 cd backstage
 ```
 
