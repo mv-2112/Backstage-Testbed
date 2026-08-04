@@ -1,8 +1,27 @@
 # Backstage-Testbed
-How to setup a viable backstage personal development system
 
+How to setup a viable backstage personal development system with a database backend and github auth.
 
+---
+## Pre-reqs
 
+### Github account
+
+You'll need a github account, naturally. The part we are after is the username, e.g github.com/__bob__
+
+```bash
+export GITHUB_USER="bob"
+```
+
+### Github Organisation
+
+You can create one here at [https://github.com/settings/organizations](https://github.com/settings/organizations). You might be able to do this without, but i did and it works.
+
+```bash
+export GITHUB_ORG="my_github_org"
+```
+
+---
 
 ## Install k8s
 
