@@ -134,7 +134,7 @@ spec:
 ```
 Run the below to install.
 ```bash
-helm install pgedge pgedge/pgedge   --values ./values.yaml   --wait -n backstage  --create-namespace
+kubectl apply -f ./values.yaml
 ```
   
 ## Install node.js
