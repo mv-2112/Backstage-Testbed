@@ -173,9 +173,26 @@ Ok to proceed? (y) y
 ? Enter a name for the app [required] backstage
 ```
 
+
 ```bash
 cd backstage
 ```
+
+Install modules for github auth and catalog sync (for users).
+```bash
+yarn --cwd packages/backend add @backstage/plugin-auth-backend-module-github-provider
+yarn --cwd packages/backend add @backstage/plugin-catalog-backend-module-github-org
+```
+
+Remove the production config
+```bash
+mv app-config.production.yaml app-config.production.yaml.donotuse
+```
+__TODO__
+- alter files
+- create github org... or personal?
+  
+
 
 From https://backstage.io/docs/deployment/docker#host-build
 ```bash
@@ -184,11 +201,7 @@ yarn tsc
 yarn build:backend
 ```
 
-Install modules for github auth and catalog sync (for users).
-```bash
-yarn --cwd packages/backend add @backstage/plugin-auth-backend-module-github-provider
-yarn --cwd packages/backend add @backstage/plugin-catalog-backend-module-github-org
-```
+
 
 Create a Github app
 
