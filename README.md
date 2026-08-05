@@ -321,8 +321,7 @@ yq -i '.backend.baseUrl="https://backstage.local"' ./app-config.yaml
 
 yq -i '.backend.database = {"client": "pg", "connection": {"host": "${POSTGRES_HOST}", "port": 5432, "user": "${POSTGRES_USER}", "password": "${POSTGRES_PASSWORD}"}}' ./app-config.yaml
 
-yq -i 'with(.integrations.github[0]; . *= {"host": "github.com", "apps": {"appId": "${GITHUB_APP_ID}", "clientId": "${GITHUB_APP_CLIENT_ID}", "clientSecret": "${GITHUB_APP_CLIENT_SECRET}", "privateKey": "${GITHUB_APP_PRIVATE_KEY}"}} | del(.token))' ./app-config.yaml
-
+yq -i 'with(.integrations.github[0]; . *= {"host": "github.com", "apps": [{"appId": "${GITHUB_APP_ID}", "clientId": "${GITHUB_APP_CLIENT_ID}", "clientSecret": "${GITHUB_APP_CLIENT_SECRET}", "privateKey": "${GITHUB_APP_PRIVATE_KEY}"}]} | del(.token))' ./app-config.yaml
 
 yq -i '.auth = {"clientIdMetadataDocuments": {"enabled": false}, "environment": "production", "providers": {"github": {"production": {"clientId": "${GITHUB_APP_CLIENT_ID}", "clientSecret": "${GITHUB_APP_CLIENT_SECRET}", "signIn": {"resolvers": [{"resolver": "usernameMatchingUserEntityName"}]}}}}}' ./app-config.yaml
 
