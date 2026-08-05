@@ -355,11 +355,9 @@ docker push $DOCKER_REPO/backstage:0.0.15
 
 ---
 
-__TODO__
-
 ## Create a Github app
 
-This step requires a browser, so if running from Multipass it may not work.
+This step requires a browser, so if running from Multipass or Virtualbox without a GUI it may not work. Use the __Manual method__ instead.
 
 ### Manual method
 
@@ -372,6 +370,7 @@ The key fields to populate are:-
 
 | Field | Value |
 |-------|-------|
+|GitHub App name| Backstage-yournamehere|
 |Homepage URL|https://backstage.local|
 |Callback URL|https://backstage.local|
 |Webhook| Inactive, clear the tick in the Active tickbox|
@@ -393,6 +392,17 @@ You will need to grant some permissions (this got things working, and must not b
 * This should be enabled as Mandatory
 
 Click __Create GitHub App__
+
+On the next screen you will be able to see the __App ID__ and __Client ID__. Note these down.
+
+Click the __Generate a new client secret__ button, and copy the secret out for later.
+
+Click the __Generate a private key__ button, this will download a .pem for later.
+
+Finally click the __Save changes__ button.
+
+Use the values above to update the __backstage-secrets.yaml__ file.
+
 
 
 
