@@ -103,8 +103,9 @@ newgrp microk8s
 ```bash
 sudo snap install gh --classic
 ```
-``` { .bash #gh_auth_login style="color: #333; background: #f8f8f8;" }
-gh auth login
+Use `gh` to authenticate, sample shown below.
+```bash
+$ gh auth login
 ? Where do you use GitHub? GitHub.com
 ? What is your preferred protocol for Git operations on this host? HTTPS
 ? Authenticate Git with your GitHub credentials? Yes
