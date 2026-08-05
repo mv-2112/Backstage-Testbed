@@ -264,7 +264,7 @@ spec:
 ### Deploy CloudNativePG instance
 
 ```bash
-kubectl create ns backspace
+kubectl create ns backstage
 ```
 
 Run the below to install.
