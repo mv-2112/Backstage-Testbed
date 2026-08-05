@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backstage
+  namespace: backstage
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backstage
+  template:
+    metadata:
+      labels:
+        app: backstage
+    spec:
+      containers:
+        - name: backstage
+          image: docker.io/verranm/backstage:0.0.82
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 7007
+              name: backend
+            - containerPort: 3000
+              name: frontend
+          env:
+            - name: POSTGRES_HOST
+              value: backstage-database-rw.backstage.svc.cluster.local
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: backstage-database-app
+                  key: username
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: backstage-database-app
+                  key: password
+            - name: TRUST_PROXY
+              value: "true"
+            - name: GITHUB_APP_ID
+              valueFrom:
+                secretKeyRef:
+                  name: backstage-github-secrets
+                  key: GITHUB_APP_ID
+            - name: GITHUB_APP_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: backstage-github-secrets
+                  key: GITHUB_APP_CLIENT_ID
+            - name: GITHUB_APP_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: backstage-github-secrets
+                  key: GITHUB_APP_CLIENT_SECRET
+            - name: GITHUB_APP_PRIVATE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: backstage-github-secrets
+                  key: GITHUB_APP_PRIVATE_KEY
+
