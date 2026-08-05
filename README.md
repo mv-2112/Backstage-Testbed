@@ -2,7 +2,7 @@
 
 How to setup a viable backstage personal development system with a database backend and github auth.
 
-This was created and proven on Ubuntu 26.04 LTS. You can use something like Virtualbox, Multipass etc to run Ubuntu on Windows if you like. (Also useful on Linux too if you want to leave your main install pristine).
+This was created and proven on Ubuntu 26.04 LTS. You can use something like Virtualbox to run Ubuntu on Windows if you like. (Also useful on Linux too if you want to leave your main install pristine). Unfortunately Multipass is not an option as Metallb won't work there.
 
 ---
 ## Pre-reqs
