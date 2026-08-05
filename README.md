@@ -98,6 +98,28 @@ alias kubectl='microk8s kubectl'
 sudo usermod -a -G microk8s $USER
 newgrp microk8s
 ```
+### Install gh 
+
+```bash
+sudo snap install gh --classic
+```
+
+gh auth login
+? Where do you use GitHub? GitHub.com
+? What is your preferred protocol for Git operations on this host? HTTPS
+? Authenticate Git with your GitHub credentials? Yes
+? How would you like to authenticate GitHub CLI? Login with a web browser
+
+! First copy your one-time code: 414C-B407
+Press Enter to open https://github.com/login/device in your browser... 
+! Failed opening a web browser at https://github.com/login/device
+  exec: "xdg-open,x-www-browser,www-browser,wslview": executable file not found in $PATH
+  Please try entering the URL in your browser manually
+✓ Authentication complete.
+- gh config set -h github.com git_protocol https
+✓ Configured git protocol
+! Authentication credentials saved in plain text
+✓ Logged in as mv-2112
 
 ### Install Docker
 
@@ -335,11 +357,104 @@ __TODO__
 
 ## Create a Github app
 
+This step requires a browser, so if running from Multipass it may not work.
+
+### Manual method
+
+In your github Organisation, open its settings (make sure it is your Org and not your account) and expand the __Developer Settings__ section. Click __Github Apps__.
+
+Click __New Github App__
+
+#### Key fields
+The key fields to populate are:-
+
+| Field | Value |
+|-------|-------|
+|Homepage URL|https://backstage.local|
+|Callback URL|https://backstage.local|
+|Webhook| Inactive, clear the tick in the Active tickbox|
+
+
+#### Permissions
+You will need to grant some permissions (this got things working, and must not be considered best practice)
+
+| Section | Permission | Access level |
+|-------|-------|-------|
+|Repository permissions|Actions|Read and write|
+|Repository permissions|Administration|Read and write|
+|Repository permissions|Commit Statuses|Read and write|
+|Repository permissions|Contents|Read and write|
+|Repository permissions|Metadata *|Read-only|
+|Repository permissions|Pull requests|Read and write|
+|Organization permissions|Members|Read-only|
+
+* This should be enabled as Mandatory
+
+Click __Create GitHub App__
+
+
+
+### Backstage YARN method
+
+This still needs manual steps though.
+
 ```bash
 yarn backstage-cli create-github-app blackcatengineering
 ```
+ubuntu@climactic-bull:~/Backstage-Testbed/backstage$ yarn backstage-cli create-github-app blackcatengineering
+? Select permissions [required] (these can be changed later but then require approvals in all installations) (Press <space> to select, <a> to toggle all, <i> to invert selection, 
+and <enter> to proceed)
+ ◉ Read access to content (required by Software Catalog to ingest data from repositories)
+ ◉ Read access to members (required by Software Catalog to ingest GitHub teams)
+❯◉ Read and Write to content and actions (required by Software Templates to create new repositories)
 
 
+Pops open your browser 
+
+
+yarn backstage-cli create-github-app blackcatengineering
+? Select permissions [required] (these can be changed later but then require approvals in all installations) Read access to content (required by Software Catalog to 
+ingest data from repositories), Read access to members (required by Software Catalog to ingest GitHub teams), Read and Write to content and actions (required by 
+Software Templates to create new repositories)
+GitHub App configuration written to github-app-backstage-deadbeef-credentials.yaml
+This file contains sensitive credentials, it should not be committed to version control and handled with care!
+Here's an example on how to update the integrations section in app-config.yaml
+
+integrations:
+  github:
+    - host: github.com
+      apps:
+
+
+We won't update as it mentions as this would bake the credentials into the app-config.
+
+Instead, use the file to create k8s secrets.
+
+```bash
+yq eval '{
+  "apiVersion": "v1",
+  "kind": "Secret",
+  "metadata": {"name": "backstage-github-secrets", "namespace": "backstage"},
+  "type": "Opaque",
+  "stringData": {
+    "GITHUB_APP_ID": .appId | tag == "!!str",
+    "GITHUB_APP_CLIENT_ID": .clientId,
+    "GITHUB_APP_CLIENT_SECRET": .clientSecret,
+    "GITHUB_APP_WEBHOOK_SECRET": .webhookSecret,
+    "GITHUB_APP_PRIVATE_KEY": .privateKey
+  }
+}' github-app-backstage-deadbeef-credentials.yaml > backstage-secrets.yaml
+```
+
+Remove the generated file and copy your k8s secret file out of the application directory.
+```bash
+rm github-app-backstage-deadbeef-credentials.yaml
+mv backstage-github-secrets.yaml ..
+```
+
+__NOTE__: You will need to setup the GitHub app with the key values and permissions from the manual section.
+
+---
 
 ## Might be needed for DB
 kubectl exec -it backstage-database-1 -n backstage -- psql -U postgres -d postgres -c "ALTER USER app CREATEDB;"
