@@ -155,7 +155,7 @@ microk8s enable cert-manager
 ```
 Enable metallb with an IP range applicable to your machines subnet
 ```bash
-microk8s enable metallb: 10.225.118.20-10.225.118.39
+microk8s enable metallb 10.225.118.20-10.225.118.39
 ```
 ### Install node.js
 
