@@ -243,7 +243,7 @@ helm install cnpg pgedge/cloudnative-pg \
   --create-namespace
 ```
 
-### Deploy CloudNativePG instance
+### Create CloudNativePG config
 
 Create a pg_values.yaml from https://github.com/pgEdge/pgedge-helm/blob/main/examples/configs/single/values.yaml or use the one in this repo.
 ```yaml
@@ -260,6 +260,13 @@ spec:
   storage:
     size: 10Gi
 ```
+
+### Deploy CloudNativePG instance
+
+```bash
+kubectl create ns backspace
+```
+
 Run the below to install.
 ```bash
 kubectl apply -f ./pg_values.yaml
