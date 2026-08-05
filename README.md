@@ -482,6 +482,10 @@ __NOTE__: You will need to setup the GitHub app with the key values and permissi
 Run this in your terminal
 
 ```bash
+kubectl exec -it backstage-database-1 -n backstage -- psql -U postgres -d postgres -c "ALTER USER app CREATEDB;"
+```
+
+```bash
 cd ..
 ```
 
@@ -492,24 +496,38 @@ for each in $(ls backstage-*.yaml)
 > done
 ```
 
+Last but not least... get your IP address from Traefik, and add it to your __/etc/hosts__ file
 
+e.g
+
+```bash
+$ kubectl get svc -n ingress -o json | jq -r '.items[].status.loadBalancer.ingress[].ip'
+192.168.88.10
+```
+
+Add an entry into you /etc/hosts file (assuming you don't have a dns system!)
+
+```text
+$ cat /etc/hosts
+127.0.0.1 localhost
+
+192.168.88.10 backstage.local
+
+# The following lines are desirable for IPv6 capable hosts
+::1     ip6-localhost ip6-loopback
+fe00::0 ip6-localnet
+ff00::0 ip6-mcastprefix
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+```
+
+Now go to [http://backstage.local](http://backstage.local) in your browser, you should be redirected to the https page (you will to allow the dodgy cert).
 
 ---
 
-## Might be needed for DB
-kubectl exec -it backstage-database-1 -n backstage -- psql -U postgres -d postgres -c "ALTER USER app CREATEDB;"
 
 
 
-## Deploy Backstage to your cluster
-kubectl apply -f backstage-prod.yaml
 
-What order to apply in?
-
-backstage-ingress.yaml
-backstage-prod.yaml
-backstage-service.yaml
-backstage-issuer.yaml
-backstage-redirect.yaml
 
 
