@@ -477,6 +477,24 @@ mv backstage-github-secrets.yaml ..
 __NOTE__: You will need to setup the GitHub app with the key values and permissions from the manual section.
 
 ---
+## Deploy Backstage - FINALLY!
+
+Run this in your terminal
+
+```bash
+cd ..
+```
+
+```bash
+for each in $(ls backstage-*.yaml)
+> do
+> kubectl apply -f $each
+> done
+```
+
+
+
+---
 
 ## Might be needed for DB
 kubectl exec -it backstage-database-1 -n backstage -- psql -U postgres -d postgres -c "ALTER USER app CREATEDB;"
