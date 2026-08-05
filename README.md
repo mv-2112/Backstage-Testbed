@@ -488,6 +488,8 @@ kubectl exec -it backstage-database-1 -n backstage -- psql -U postgres -d postgr
 cd ..
 ```
 
+Make sure you update __backstage-deploy.yaml__ to use your docker image. Once done, run the below.
+
 ```bash
 for each in $(ls backstage-*.yaml)
 > do
