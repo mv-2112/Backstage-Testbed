@@ -420,13 +420,16 @@ This still needs manual steps though.
 ```bash
 yarn backstage-cli create-github-app blackcatengineering
 ```
+
+Example output
+```bash
 ubuntu@climactic-bull:~/Backstage-Testbed/backstage$ yarn backstage-cli create-github-app blackcatengineering
 ? Select permissions [required] (these can be changed later but then require approvals in all installations) (Press <space> to select, <a> to toggle all, <i> to invert selection, 
 and <enter> to proceed)
  ◉ Read access to content (required by Software Catalog to ingest data from repositories)
  ◉ Read access to members (required by Software Catalog to ingest GitHub teams)
 ❯◉ Read and Write to content and actions (required by Software Templates to create new repositories)
-
+```
 
 Pops open your browser 
 
