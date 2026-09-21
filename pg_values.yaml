@@ -9,4 +9,4 @@ spec:
   monitoring:
     enablePodMonitor: true
   storage:
-    size: 1Gi
+    size: 10Gi
