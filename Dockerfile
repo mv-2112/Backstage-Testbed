@@ -3,12 +3,16 @@ FROM node:24-trixie-slim
 # Set Python interpreter for `node-gyp` to use
 ENV PYTHON=/usr/bin/python3
 
-# Install isolate-vm dependencies, these are needed by the @backstage/plugin-scaffolder-backend.
+# Install isolate-vm and local TechDocs dependencies
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,sharing=locked \
     apt-get update && \
-    apt-get install -y --no-install-recommends python3 g++ build-essential && \
+    apt-get install -y --no-install-recommends python3 python3-pip python3-venv g++ build-essential && \
     rm -rf /var/lib/apt/lists/*
+
+# Install the Python markdown compilation binaries globally inside the image
+# --break-system-packages is required for newer Debian builds (like Trixie) to bypass virtualenv rules
+RUN pip3 install --no-cache-dir mkdocs mkdocs-techdocs-core --break-system-packages
 
 # From here on we use the least-privileged `node` user to run the backend.
 USER node
