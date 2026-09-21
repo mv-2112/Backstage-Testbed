@@ -336,10 +336,11 @@ yq -i ' .permission = {"enabled": true, "options": {"adminUsers": [("user:defaul
 yq -i ' .techdocs.builder = "local" | .techdocs.generator.runIn = "local"' ./app-config.yaml
 
 # Sets the runIn strategy and explicitly locks down the catalog.rules array block
+# Review the allowed to suit your needs (i.e this is not Production config)
 yq -i '
   .techdocs.builder = "local" |
   .techdocs.generator.runIn = "local" |
-  .catalog.rules = [{"allow": ["Component", "Template", "Location", "API"]}]
+  .catalog.rules = [{"allow": [Component, Template, Location, API, System, Domain, Group, User]}]
 ' ./app-config.yaml
 
 
