@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: backstage
-          image: docker.io/verranm/backstage:0.0.82
+          image: docker.io/verranm/backstage:0.0.93
           imagePullPolicy: Always
           ports:
             - containerPort: 7007
