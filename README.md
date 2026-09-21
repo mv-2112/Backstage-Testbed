@@ -340,7 +340,7 @@ yq -i ' .techdocs.builder = "local" | .techdocs.generator.runIn = "local"' ./app
 yq -i '
   .techdocs.builder = "local" |
   .techdocs.generator.runIn = "local" |
-  .catalog.rules = [{"allow": [Component, Template, Location, API, System, Domain, Group, User]}]
+  .catalog.rules = [{"allow": ["Component", "Template", "Location", "API", "System", "Domain", "Group", "User"]}]
 ' ./app-config.yaml
 
 
