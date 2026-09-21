@@ -475,6 +475,8 @@ mv backstage-github-secrets.yaml ..
 
 __NOTE__: You will need to setup the GitHub app with the key values and permissions from the manual section.
 
+Once created, you will need to use the Install App section to install the Github App to youyr Org. Without this Backstage will not authenticate users.
+
 ---
 ## Deploy Backstage - FINALLY!
 
