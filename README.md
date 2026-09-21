@@ -522,7 +522,7 @@ ff02::1 ip6-allnodes
 ff02::2 ip6-allrouters
 ```
 
-Now go to [http://backstage.local](http://backstage.local) in your browser, you should be redirected to the https page (you will to allow the dodgy cert).
+Now go to [http://backstage.local](http://backstage.local) in your browser, you should be redirected to the https page (you will to need to allow the dodgy cert).
 
 ---
 
