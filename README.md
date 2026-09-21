@@ -331,6 +331,18 @@ yq -i '.scaffolder.experimentalTemplateEditor = true' ./app-config.yaml
 yq -i ' .catalog = {"providers": {"githubOrg": [{"id": "production", "githubUrl": "https://github.com", "orgs": [env(GITHUB_ORG)], "schedule": {"frequency": {"minutes": 10}, "timeout": {"minutes": 5}}}]}}' ./app-config.yaml
   
 yq -i ' .permission = {"enabled": true, "options": {"adminUsers": [("user:default/" + env(GITHUB_USER))]}} ' ./app-config.yaml
+
+# Safely navigates the techdocs block and sets local execution parameters
+yq -i ' .techdocs.builder = "local" | .techdocs.generator.runIn = "local"' ./app-config.yaml
+
+# Sets the runIn strategy and explicitly locks down the catalog.rules array block
+yq -i '
+  .techdocs.builder = "local" |
+  .techdocs.generator.runIn = "local" |
+  .catalog.rules = [{"allow": ["Component", "Template", "Location", "API"]}]
+' ./app-config.yaml
+
+
 ```
 
 
